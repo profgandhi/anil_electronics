@@ -116,9 +116,9 @@ const AddressPage: React.FC = () => {
   };
 
   // Handle cancel action
-  const handleCancel = () => {
-    router.push('/cart');
-  };
+  // const handleCancel = () => {
+  //   router.push('/cart');
+  // };
 
   // Handle selecting an existing address
   const handleSelectAddress = (address: GlobalAddress) => {

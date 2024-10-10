@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import withAuth from '../../components/withAuth';
 import { Product, fetchProducts, addProduct, editProduct, deleteProduct } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import Image from 'next/image'
 
 const AdminProducts: React.FC = () => {
   const { token } = useAuth();
@@ -81,7 +82,7 @@ const AdminProducts: React.FC = () => {
                     <div key={key} className="bg-green-100 p-2 rounded mb-1"><strong>{key}</strong>: {value}</div>
                   ))}
                 </td>
-                <td className="py-2 px-4 border text-center">{img ? <img src={img} alt={name} className="w-16 h-16 object-cover" /> : 'N/A'}</td>
+                <td className="py-2 px-4 border text-center">{img ? <Image src={img} alt={name} className="w-16 h-16 object-cover" /> : 'N/A'}</td>
                 <td className="py-2 px-4 border text-center">
                   <button onClick={() => { setIsEditMode(true); setCurrentProduct({ id, name, price, product_type, metadata, img }); setFormData({ name, price, description: '', product_type, img, metadata }); setIsModalOpen(true); }} className="mr-2 px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600">Edit</button>
                   <button onClick={() => handleDelete(id)} className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">Delete</button>
@@ -103,6 +104,7 @@ const AdminProducts: React.FC = () => {
                   <input
                     type={field === 'price' ? 'number' : 'text'}
                     name={field}
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     value={(formData as any)[field]}
                     onChange={handleChange}
                     className="w-full border px-3 py-2 rounded"

@@ -38,6 +38,7 @@ const CartPage: React.FC = () => {
         const cartItemsData = response.data;
 
         const itemsWithDetails: GlobalCartItem[] = await Promise.all(
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           cartItemsData.map(async (cartItem: any) => {
             const productResponse = await fetchProductById(cartItem.product_id);
             const product = productResponse.data;

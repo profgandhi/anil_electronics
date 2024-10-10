@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../context/AuthContext'; // Ensure AuthContext is updated accordingly
+import Link from 'next/link';
 
 const LoginPage: React.FC = () => {
     const [identifier, setIdentifier] = useState(''); // Can be username or email
@@ -22,6 +23,7 @@ const LoginPage: React.FC = () => {
 
             // Redirect to home page or dashboard after successful login
             router.push('/');
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setLoading(false);
             setError(err.message || "Login failed. Please check your credentials.");
@@ -82,10 +84,10 @@ const LoginPage: React.FC = () => {
                     </button>
                 </form>
                 <p className="mt-4 text-sm text-center text-gray-600">
-                    Don't have an account?{' '}
-                    <a href="/register" className="text-blue-600 hover:underline">
+                    Dont have an account?
+                    <Link href="/register" className="text-blue-600 hover:underline">
                         Register here
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>

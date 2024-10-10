@@ -1,7 +1,6 @@
 // pages/products/[id].tsx
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
-import Link from 'next/link';
 import { fetchProductById, Product as ProductType, addToCart } from '../../services/api';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../context/AuthContext';
@@ -13,7 +12,7 @@ interface ProductPageProps {
 const ProductPage = ({ product }: ProductPageProps) => {
   const [quantity, setQuantity] = useState<number>(1);
   // Access global cart items and setter
-  const { cartItems, setCartItems } = useGlobal();
+  const { setCartItems } = useGlobal();
 
   const router = useRouter();
   const {token} = useAuth() 

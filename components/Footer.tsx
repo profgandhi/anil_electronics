@@ -1,6 +1,6 @@
 // components/Footer.tsx
 import Link from 'next/link';
-
+import Image from 'next/image'
 const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-10 mt-10 z-50">
@@ -51,16 +51,16 @@ const Footer = () => {
             {/* Social Media Icons */}
             <div className="flex space-x-4 mt-4">
               <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <img src="/facebook-icon.png" alt="Facebook" className="w-6 h-6" />
+                <Image src="/facebook-icon.png" alt="Facebook" className="w-6 h-6" />
               </Link>
               <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <img src="/twitter-icon.png" alt="Twitter" className="w-6 h-6" />
+                <Image src="/twitter-icon.png" alt="Twitter" className="w-6 h-6" />
               </Link>
               <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <img src="/instagram-icon.png" alt="Instagram" className="w-6 h-6" />
+                <Image src="/instagram-icon.png" alt="Instagram" className="w-6 h-6" />
               </Link>
               <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                <img src="/linkedin-icon.png" alt="LinkedIn" className="w-6 h-6" />
+                <Image src="/linkedin-icon.png" alt="LinkedIn" className="w-6 h-6" />
               </Link>
             </div>
           </div>

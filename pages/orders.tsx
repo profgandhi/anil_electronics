@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { fetchOrders } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import withAuth from '../components/withAuth';
-import Link from 'next/link';
 import SidebarMenu from '../components/SidebarMenu';
 import Breadcrumbs from '../components/Breadcrumbs';
 
@@ -23,7 +22,7 @@ interface Order {
 }
 
 const MyOrdersPage: React.FC = () => {
-  const { token, logout } = useAuth();
+  const { token} = useAuth();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);

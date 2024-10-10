@@ -13,7 +13,7 @@ type AddressForm = Omit<AddressType, 'id' | 'created_at'> & {
 };
 
 const ManageAddressPage: React.FC = () => {
-  const { token, logout } = useAuth();
+  const { token } = useAuth();
   const [addresses, setAddresses] = useState<AddressType[]>([]);
   const [newAddress, setNewAddress] = useState<AddressForm>({
     houseNo: '',

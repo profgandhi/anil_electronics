@@ -1,4 +1,3 @@
-import Navbar from '../components/Navbar';
 import Slider from '../components/Slider';
 import Link from 'next/link';
 
@@ -12,9 +11,9 @@ const Home = () => {
           Discover the best products at unbeatable prices. Shop now and enjoy an amazing shopping experience!
         </p>
         <div className="mt-10 flex justify-center">
-          <a href="/products" className="bg-blue-500 text-white px-5 py-3 rounded-md hover:bg-blue-600 transition">
+          <Link href="/products" className="bg-blue-500 text-white px-5 py-3 rounded-md hover:bg-blue-600 transition">
             Explore Products
-          </a>
+          </Link>
         </div>
       </div>
     </>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import { registerUser } from '../services/api'; // Ensure this function handles all fields
+import Link from 'next/link';
 
 const RegisterPage: React.FC = () => {
     const [username, setUsername] = useState('');
@@ -60,6 +61,7 @@ const RegisterPage: React.FC = () => {
                     router.push('/login');
                 }, 2000);
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (err: any) {
             setLoading(false);
             setError(err.response?.data?.message || "Registration failed. Please try again.");
@@ -250,9 +252,9 @@ const RegisterPage: React.FC = () => {
                 </form>
                 <p className="mt-4 text-sm text-center text-gray-600">
                     Already have an account?{' '}
-                    <a href="/login" className="text-blue-600 hover:underline">
+                    <Link href="/login" className="text-blue-600 hover:underline">
                         Login here
-                    </a>
+                    </Link>
                 </p>
             </div>
         </div>

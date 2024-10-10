@@ -4,7 +4,7 @@ import MiniNavbar from "./MiniNavbar";
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext'; // Ensure the correct path
 import SearchBar from './SearchBar'; // Import the new SearchBar component
-
+import Image from 'next/image'
 // Dark theme color variables
 const bgNavbar = "bg-gray-900";
 const shadowNavbar = "shadow-lg";
@@ -34,7 +34,7 @@ export default function Navbar() {
             {/* Logo Section */}
             <div className="flex items-center h-full">
               <Link href="/">
-                <img
+                <Image
                   src="/images/anilelectronics.jpg"
                   alt="Logo"
                   className="h-16 w-32"  

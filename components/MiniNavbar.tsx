@@ -55,7 +55,6 @@ const categories: Category[] = [
 const bgNavbar = "bg-gray-900";
 const textCategory = "text-gray-300";
 const hoverTextCategory = "hover:text-red-400";
-const dropdownBg = "bg-gray-800";
 const textSubcategory = "text-gray-400";
 const textSubcategoryTitle = "text-gray-200";
 const hoverTextSubcategory = "hover:text-red-500";

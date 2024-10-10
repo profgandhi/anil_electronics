@@ -4,13 +4,12 @@ import React, { useEffect, useState, ChangeEvent, FormEvent } from 'react';
 import withAuth from '../components/withAuth';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
-import Link from 'next/link';
 import { fetchProfile, UserProfile } from '../services/api';
 import SidebarMenu from '../components/SidebarMenu';
 import Breadcrumbs from '../components/Breadcrumbs';
 
 const ProfilePage: React.FC = () => {
-  const { token, logout } = useAuth();
+  const { token } = useAuth();
   const [user, setUser] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -24,6 +23,7 @@ const ProfilePage: React.FC = () => {
         const response = await fetchProfile(token);
         setUser(response.data);
         setFormData(response.data); // Initialize form with fetched data
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (err: any) {
         setError(err.response?.data?.message || "Failed to fetch profile.");
         console.error(err);
@@ -55,7 +55,7 @@ const ProfilePage: React.FC = () => {
     setSuccess(null);
 
     try {
-      const response = await axios.put('/api/profile', formData, {
+      await axios.put('/api/profile', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
