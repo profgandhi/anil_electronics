@@ -51,16 +51,16 @@ const Footer = () => {
             {/* Social Media Icons */}
             <div className="flex space-x-4 mt-4">
               <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
-                <Image src="/facebook-icon.png" alt="Facebook" className="w-6 h-6" />
+                <Image src="/facebook-icon.png" alt="Facebook" width={500} height={500} className="w-6 h-6" />
               </Link>
               <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter">
-                <Image src="/twitter-icon.png" alt="Twitter" className="w-6 h-6" />
+                <Image src="/twitter-icon.png" alt="Twitter" width={500} height={500} className="w-6 h-6" />
               </Link>
               <Link href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-                <Image src="/instagram-icon.png" alt="Instagram" className="w-6 h-6" />
+                <Image src="/instagram-icon.png" alt="Instagram" width={500} height={500} className="w-6 h-6" />
               </Link>
               <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-                <Image src="/linkedin-icon.png" alt="LinkedIn" className="w-6 h-6" />
+                <Image src="/linkedin-icon.png" alt="LinkedIn" width={500} height={500} className="w-6 h-6" />
               </Link>
             </div>
           </div>

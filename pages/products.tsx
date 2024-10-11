@@ -1,12 +1,18 @@
-import { useEffect, useState } from 'react';
+//  /pages/products.tsx
+import { useEffect, useState, useMemo } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import FilterBar from '../components/FilterBar';
-import Pagination from '../components/Pagination';
 import { Product } from '../services/api';
 
 // Define categories and options based on product types
-const productTypeConfig: Record<string, { categories: string[], options: Record<string, { label: string, value: string }[]> }> = {
+const productTypeConfig: Record<
+  string,
+  {
+    categories: string[];
+    options: Record<string, { label: string; value: string }[]>;
+  }
+> = {
   'air-conditioner': {
     categories: ['Brand', 'AC Type'],
     options: {
@@ -46,51 +52,76 @@ const productTypeConfig: Record<string, { categories: string[], options: Record<
 
 const Products = () => {
   const router = useRouter();
-  const { productType: queryProductType } = router.query;
-  const productType = queryProductType || 'air-conditioner';  // Default to 'air-conditioner'
-  
-  const [products, setProducts] = useState<Product[]>([]);
-  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  const productsPerPage = 3;
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
-  const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+  const { productType: queryProductType, ...queryFilters } = router.query;
+  const productType = typeof queryProductType === 'string' ? queryProductType : 'air-conditioner'; // Default to 'air-conditioner'
 
-  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchProducts = async () => {
+    setLoading(true);
+
+    try {
+      const res = await fetch(`http://localhost:5000/api/products`);
+      const data = await res.json();
+      setProducts(data);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);  // Ensure loading state is set to true before fetching
-
-      try {
-        const res = await fetch(`http://localhost:5000/api/products?product_type=${productType}`);
-        const data = await res.json();
-        setProducts(data);
-        setFilteredProducts(data); // Set initial filtered products to all products
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        setLoading(false);  // Ensure loading is false after the fetch
-      }
-    };
-
     fetchProducts();
   }, [productType]);
 
-  const handleFilterChange = (filters: { [key: string]: string | number | [number, number] }) => {
-    let filtered = products;
+  const filteredProducts = useMemo(() => {
+    let filtered = [...products];
 
-    if (filters.PriceRange) {
-      const [minPrice, maxPrice] = filters.PriceRange as [number, number];
-      filtered = filtered.filter((product) => product.price >= minPrice && product.price <= maxPrice);
+    // Apply Search filter
+  if (queryFilters.search) {
+    const searchTerm = Array.isArray(queryFilters.search)
+      ? queryFilters.search[0].toLowerCase()
+      : queryFilters.search.toLowerCase();
+    filtered = filtered.filter(
+      (product) =>
+        
+        product.name.toLowerCase().includes(searchTerm) ||
+        product.description?.toLowerCase().includes(searchTerm)
+    );
+    //console.log(filtered)
+  }
+
+    // Apply PriceRange filter
+    if (queryFilters.PriceRange) {
+      const priceRangeStr = Array.isArray(queryFilters.PriceRange)
+        ? queryFilters.PriceRange[0]
+        : queryFilters.PriceRange;
+      const [minPrice, maxPrice] = priceRangeStr.split(',').map(Number);
+      if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+        filtered = filtered.filter(
+          (product) => product.price >= minPrice && product.price <= maxPrice
+        );
+      }
     }
 
-    setFilteredProducts(filtered);
-    setCurrentPage(1); // Reset to first page on filter change
-  };
+    // Apply other category filters
+    Object.keys(queryFilters).forEach((key) => {
+      if (key !== 'PriceRange' && key !== 'search') {
+        const value = Array.isArray(queryFilters[key]) ? queryFilters[key][0] : queryFilters[key];
+        if (value) {
+          filtered = filtered.filter((product) => {
+            const productValue = product.metadata ? product.metadata[key] : undefined;
+            
+            return productValue === value;
+          });
+        }
+      }
+    });
+
+    return filtered;
+  }, [queryFilters, products]);
 
   if (loading) {
     return <div className="text-center mt-10">Loading products...</div>;
@@ -113,35 +144,31 @@ const Products = () => {
           <FilterBar
             categories={config.categories}
             options={config.options}
-            onFilterChange={handleFilterChange}
           />
         </div>
 
         {/* Products Grid */}
         <div className="flex-grow ml-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {currentProducts.map((product) => (
-              <div key={product.id} className="border p-5 shadow-lg rounded-lg">
-                <Link href={`/products/${product.id}`}>
-                  <img
-                    src={product.img}
-                    alt={product.name}
-                    className="w-full h-72 object-cover rounded"
-                  />
-                  <div className="mt-2">
-                    <h1 className="text-2xl font-bold mb-3">{product.name}</h1>
-                    <p className="text-gray-600">{product.description}</p>
-                    <p className="text-lg font-semibold mt-3">${product.price}</p>
-                  </div>
-                </Link>
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination Controls */}
-          {totalPages > 1 && (
-            <div className="mt-6 flex justify-center">
-              <Pagination currentPage={currentPage} totalPages={totalPages} paginate={paginate} />
+          {filteredProducts.length === 0 ? (
+            <div className="text-center mt-10">No products found.</div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {filteredProducts.map((product) => (
+                <div key={product.id} className="border p-5 shadow-lg rounded-lg">
+                  <Link href={`/products/${product.id}`}>
+                    <img
+                      src={product.img}
+                      alt={product.name}
+                      className="w-full h-72 object-cover rounded"
+                    />
+                    <div className="mt-2">
+                      <h1 className="text-2xl font-bold mb-3">{product.name}</h1>
+                      <p className="text-gray-600">{product.description}</p>
+                      <p className="text-lg font-semibold mt-3">${product.price}</p>
+                    </div>
+                  </Link>
+                </div>
+              ))}
             </div>
           )}
         </div>

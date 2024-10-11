@@ -37,6 +37,8 @@ export default function Navbar() {
                 <Image
                   src="/images/anilelectronics.jpg"
                   alt="Logo"
+                  width={500}
+                  height={500}
                   className="h-16 w-32"  
                 />
               </Link>
@@ -60,7 +62,7 @@ export default function Navbar() {
                     Hi, {fullName || 'User'}
                   </button>
                   {dropdownOpen && (
-                    <div className={`absolute right-0 w-48 ${dropdownBg} ${dropdownBorder} rounded-md shadow-lg z-10`}>
+                    <div className={`absolute right-0 top-16 w-48 ${dropdownBg} ${dropdownBorder} rounded-md shadow-lg z-10`}>
                       <Link href="/profile" className={`block px-4 py-2 ${dropdownText} ${dropdownHoverBg}`}>Profile</Link>
                       <Link href="/orders" className={`block px-4 py-2 ${dropdownText} ${dropdownHoverBg}`}>My Orders</Link>
                       <button 

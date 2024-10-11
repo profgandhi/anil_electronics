@@ -15,6 +15,7 @@ interface AuthContextType {
   login: (identifier: string, password: string) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  loading: boolean;
 }
 
 // Create the AuthContext with default values
@@ -34,7 +35,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserProfile | null>(null);
   const [role,setRole] = useState<string | null>(null);
-  
+  const [loading, setLoading] = useState<boolean>(true);
+
   // Function to fetch user profile
   const getUserProfile = async (authToken: string) => {
     try {
@@ -48,15 +50,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    // Check if token exists in localStorage on app load
-    const savedToken = localStorage.getItem('auth_token');
-    const storedRole = localStorage.getItem('role');
-    if (savedToken && storedRole) {
-      setToken(savedToken);
-      setRole(storedRole);
-      getUserProfile(savedToken);
-      axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
-    }
+    const checkAuth = async () => {
+      const savedToken = localStorage.getItem('auth_token');
+      const storedRole = localStorage.getItem('role');
+      if (savedToken && storedRole) {
+        setToken(savedToken);
+        setRole(storedRole);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${savedToken}`;
+        await getUserProfile(savedToken);
+      }
+      setLoading(false);
+    };
+    checkAuth();
   }, []);
 
   // Login function that calls the API and saves the token
@@ -106,6 +111,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     login,
     logout,
     isAuthenticated: !!token,
+    loading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

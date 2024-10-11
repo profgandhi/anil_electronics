@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import useFilter from '../components/useFilter'; // Import the useFilter hook
 
 // 1. Define a flexible Subcategories type
 type Subcategories = Record<string, string[]>;
@@ -38,17 +39,7 @@ const categories: Category[] = [
       ],
     },
   },
-  {
-    name: 'Air Conditioers', // Corrected from 'Air Condoners' if it was a typo
-    subcategories: {
-      Brand: ['Voltas', 'Daikin', 'LG', 'Bluestar', 'Godrej', 'Samsung', 'Hitachi'],
-      'AC Type': ['Split ACs', 'Window ACs', 'Portable ACs'],
-      Capacity: ['1 Ton and Below', '1.1 Ton to 1.5 Ton', '1.6 Ton to 1.9 Ton', '2 Ton and Above'],
-      'Energy Rating': ['5 Star ACs', '4 Star ACs', '3 Star ACs', '2 Star ACs', '1 Star ACs'],
-      Technology: ['Inverter ACs', 'Fixed Speed ACs'],
-      'Ideal Room Size': ['Up to 120 SqFt', '121 SqFt to 180 SqFt', '181 SqFt to 240 SqFt', '241 SqFt to 300 SqFt'],
-    },
-  },
+  // ... (other categories)
 ];
 
 // Dark theme color variables with grey border
@@ -65,6 +56,15 @@ const separatorBorder = "border-t border-gray-600";  // Grey separator between b
 export default function MiniNavbar() {
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
 
+  // Use the useFilter hook to get access to updateFilter
+  const { updateFilter } = useFilter();
+
+  // Function to handle subcategory item clicks
+  const handleSubcategoryClick = (subcategoryTitle: string, item: string) => {
+    // Update the filter with the subcategory title as the key and the item as the value
+    updateFilter(subcategoryTitle, item);
+  };
+
   return (
     <nav className={`${bgNavbar} ${separatorBorder} p-3`}>
       <ul className="flex justify-center space-x-8">
@@ -80,7 +80,7 @@ export default function MiniNavbar() {
             </button>
             {hoveredCategory === category.name && (
               <div
-                className={`absolute left-0 top-full  w-[600px] ${bgNavbar} ${shadowDropdown} ${borderDropdown} rounded-lg p-6 z-10`}
+                className={`absolute left-0 top-full w-[600px] ${bgNavbar} ${shadowDropdown} ${borderDropdown} rounded-lg p-6 z-10`}
               >
                 {/* Dropdown content */}
                 <div className="grid grid-cols-3">
@@ -91,7 +91,11 @@ export default function MiniNavbar() {
                       </h4>
                       <ul>
                         {category.subcategories[subcategoryTitle].map((item) => (
-                          <li key={item} className={`${textSubcategory} py-1 ${hoverTextSubcategory}`}>
+                          <li
+                            key={item}
+                            className={`${textSubcategory} py-1 ${hoverTextSubcategory} cursor-pointer`} // Added cursor-pointer
+                            onClick={() => handleSubcategoryClick(subcategoryTitle, item)} // Added onClick handler
+                          >
                             {item}
                           </li>
                         ))}
@@ -107,4 +111,3 @@ export default function MiniNavbar() {
     </nav>
   );
 }
-
